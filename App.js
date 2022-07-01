@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Button, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -7,6 +7,7 @@ import ManageExpenseScreen from "./screens/ManageExpenseScreen";
 import RecentExpensesScreen from "./screens/RecentExpensesScreen";
 import AllExpensesScreen from "./screens/AllExpensesScreen";
 import { AntDesign } from "@expo/vector-icons";
+import { colors } from "./constants/colors";
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -32,7 +33,7 @@ const ExpensesOverview = ({ navigation }) => {
         options={{
           title: "Recent Expenses",
           headerStyle: {
-            backgroundColor: "#f4511e",
+            backgroundColor: colors.primary500,
           },
           headerTintColor: "#fff",
           headerRight: () => headerRightButton(navigation),
