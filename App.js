@@ -6,27 +6,28 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ManageExpenseScreen from "./screens/ManageExpenseScreen";
 import RecentExpensesScreen from "./screens/RecentExpensesScreen";
 import AllExpensesScreen from "./screens/AllExpensesScreen";
-import { AntDesign } from "@expo/vector-icons";
 import { colors } from "./constants/colors";
+import IconButton from "./components/UI/IconButton";
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 
-const headerRightButton = (navigation) => {
-  return (
-    <AntDesign
-      style={{ marginRight: 10 }}
-      name="plus"
-      size={26}
-      color="white"
-      onPress={() => navigation.navigate("ManageExpense")}
-    />
-  );
-};
-
 const ExpensesOverview = ({ navigation }) => {
   return (
-    <BottomTabs.Navigator>
+    <BottomTabs.Navigator
+      screenOptions={{
+        headerRight: () => (
+          <IconButton
+            icon="add"
+            size={32}
+            color="white"
+            onPress={() => {
+              navigation.navigate("ManageExpense");
+            }}
+          />
+        ),
+      }}
+    >
       <BottomTabs.Screen
         name="RecentExpenses"
         component={RecentExpensesScreen}
@@ -36,7 +37,6 @@ const ExpensesOverview = ({ navigation }) => {
             backgroundColor: colors.primary500,
           },
           headerTintColor: "#fff",
-          headerRight: () => headerRightButton(navigation),
         }}
       />
       <BottomTabs.Screen
@@ -48,7 +48,6 @@ const ExpensesOverview = ({ navigation }) => {
             backgroundColor: "#f4511e",
           },
           headerTintColor: "#fff",
-          headerRight: () => headerRightButton(navigation),
         }}
       />
     </BottomTabs.Navigator>

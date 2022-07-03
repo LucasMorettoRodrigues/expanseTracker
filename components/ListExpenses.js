@@ -1,21 +1,30 @@
-import { StyleSheet, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { StyleSheet, Text, View, ScrollView, Pressable } from "react-native";
 import { colors } from "../constants/colors";
+import { getFormattedDate } from "../util/date";
 
 export default ListExpenses = ({ expenses }) => {
+  const navigation = useNavigation();
   return (
-    <View>
+    <ScrollView>
       {expenses.map((expense) => (
-        <View style={styles.card} key={expense.id}>
+        <Pressable
+          onPress={() =>
+            navigation.navigate("ManageExpense", { data: expense })
+          }
+          style={styles.card}
+          key={expense.id}
+        >
           <View>
             <Text style={styles.description}>{expense.description}</Text>
-            <Text style={styles.date}>{expense.date.toString()}</Text>
+            <Text style={styles.date}>{getFormattedDate(expense.date)}</Text>
           </View>
           <View style={styles.priceContainer}>
             <Text style={styles.price}>{expense.amount}</Text>
           </View>
-        </View>
+        </Pressable>
       ))}
-    </View>
+    </ScrollView>
   );
 };
 
