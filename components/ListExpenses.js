@@ -10,7 +10,7 @@ export default ListExpenses = ({ expenses }) => {
       {expenses.map((expense) => (
         <Pressable
           onPress={() =>
-            navigation.navigate("ManageExpense", { data: expense })
+            navigation.navigate("ManageExpense", { expenseId: expense.id })
           }
           style={styles.card}
           key={expense.id}

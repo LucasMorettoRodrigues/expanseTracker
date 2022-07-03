@@ -1,8 +1,18 @@
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
+import Button from "../components/UI/Button";
 import { colors } from "../constants/colors";
 
-export default ManageExpenseScreen = ({ navigation }) => {
+export default ManageExpenseScreen = ({ route, navigation }) => {
+  const editedExpenseId = route.params?.expenseId;
+  const isEditing = !!editedExpenseId;
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: isEditing ? "Edit Expense" : "Add Expense",
+    });
+  }, [navigation, isEditing]);
+
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
 
@@ -19,6 +29,7 @@ export default ManageExpenseScreen = ({ navigation }) => {
           style={styles.input}
         ></TextInput>
       </View>
+
       <View style={styles.inputController}>
         <Text style={styles.label}>Amount</Text>
         <TextInput
@@ -26,10 +37,17 @@ export default ManageExpenseScreen = ({ navigation }) => {
           style={styles.input}
         ></TextInput>
       </View>
+
       <View style={styles.inputController}>
-        <Pressable onClick={handleAdd} style={styles.confirmButton}>
-          <Text style={styles.buttonText}>OK</Text>
-        </Pressable>
+        <View style={styles.buttonContainer}>
+          <Button
+            text="Cancel"
+            onPress={handleAdd}
+            mode="flat"
+            style={{ flex: 1 }}
+          />
+          <Button text="OK" onPress={handleAdd} style={{ flex: 1 }} />
+        </View>
       </View>
     </View>
   );
@@ -65,5 +83,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "white",
     fontWeight: "bold",
+  },
+  buttonContainer: {
+    flexDirection: "row",
   },
 });
