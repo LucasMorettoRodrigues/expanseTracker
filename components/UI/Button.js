@@ -1,13 +1,16 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { colors } from "../../constants/colors";
 
-export default Button = ({ text, onPress, mode, style }) => {
+export default Button = ({ children, onPress, mode, style }) => {
   return (
     <View style={style}>
-      <Pressable onPress={onPress}>
+      <Pressable
+        onPress={onPress}
+        style={({ pressed }) => pressed && styles.pressed}
+      >
         <View style={[styles.button, mode === "flat" && styles.flat]}>
           <Text style={[styles.buttonText, mode === "flat" && styles.flatText]}>
-            {text}
+            {children}
           </Text>
         </View>
       </Pressable>
@@ -33,5 +36,9 @@ const styles = StyleSheet.create({
   },
   flatText: {
     color: colors.primary500,
+  },
+  pressed: {
+    opacity: 0.75,
+    backgroundColor: colors.primary100,
   },
 });

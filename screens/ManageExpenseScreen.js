@@ -40,13 +40,12 @@ export default ManageExpenseScreen = ({ route, navigation }) => {
 
       <View style={styles.inputController}>
         <View style={styles.buttonContainer}>
-          <Button
-            text="Cancel"
-            onPress={handleAdd}
-            mode="flat"
-            style={{ flex: 1 }}
-          />
-          <Button text="OK" onPress={handleAdd} style={{ flex: 1 }} />
+          <Button onPress={handleAdd} mode="flat" style={{ flex: 1 }}>
+            Cancel
+          </Button>
+          <Button onPress={handleAdd} style={{ flex: 1 }}>
+            OK
+          </Button>
         </View>
       </View>
     </View>
