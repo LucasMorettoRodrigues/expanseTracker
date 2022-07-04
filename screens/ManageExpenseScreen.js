@@ -1,9 +1,13 @@
-import { useLayoutEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet, Pressable } from "react-native";
+import { useContext, useLayoutEffect, useState } from "react";
+import { View, Text, TextInput, StyleSheet } from "react-native";
 import Button from "../components/UI/Button";
 import { colors } from "../constants/colors";
+import IconButton from "../components/UI/IconButton";
+import { ExpensesContext } from "../store/expenses-context";
 
 export default ManageExpenseScreen = ({ route, navigation }) => {
+  const expensesCtx = useContext(ExpensesContext);
+
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
 
@@ -13,11 +17,55 @@ export default ManageExpenseScreen = ({ route, navigation }) => {
     });
   }, [navigation, isEditing]);
 
-  const [description, setDescription] = useState("");
-  const [amount, setAmount] = useState("");
+  const [description, setDescription] = useState(
+    editedExpenseId
+      ? expensesCtx.expenses.find((item) => item.id === editedExpenseId)
+          .description
+      : ""
+  );
+  const [amount, setAmount] = useState(
+    editedExpenseId
+      ? expensesCtx.expenses
+          .find((item) => item.id === editedExpenseId)
+          .amount.toString()
+      : ""
+  );
 
-  const handleAdd = () => {
-    console.log("add");
+  const handleConfirm = () => {
+    if (!isValidated()) {
+      return;
+    }
+
+    if (isEditing) {
+      expensesCtx.updateExpense(editedExpenseId, {
+        description,
+        amount: parseFloat(amount),
+      });
+    } else {
+      expensesCtx.addExpense({
+        description: description,
+        amount: parseFloat(amount),
+        date: new Date(),
+      });
+    }
+    navigation.goBack();
+  };
+
+  const handleCancel = () => {
+    navigation.goBack();
+  };
+
+  const handleDelete = () => {
+    expensesCtx.deleteExpense(editedExpenseId);
+    navigation.goBack();
+  };
+
+  const isValidated = () => {
+    if (description.length > 0 && parseInt(amount)) {
+      return true;
+    }
+
+    return false;
   };
 
   return (
@@ -25,7 +73,8 @@ export default ManageExpenseScreen = ({ route, navigation }) => {
       <View style={styles.inputController}>
         <Text style={styles.label}>Description</Text>
         <TextInput
-          onChange={(value) => setDescription(value)}
+          value={description}
+          onChangeText={(value) => setDescription(value)}
           style={styles.input}
         ></TextInput>
       </View>
@@ -33,19 +82,34 @@ export default ManageExpenseScreen = ({ route, navigation }) => {
       <View style={styles.inputController}>
         <Text style={styles.label}>Amount</Text>
         <TextInput
-          onChange={(value) => setAmount(value)}
+          value={amount}
+          onChangeText={(value) => setAmount(value)}
           style={styles.input}
         ></TextInput>
       </View>
 
       <View style={styles.inputController}>
         <View style={styles.buttonContainer}>
-          <Button onPress={handleAdd} mode="flat" style={{ flex: 1 }}>
+          <Button
+            onPress={handleCancel}
+            mode="flat"
+            style={{ flex: 1, margin: 5 }}
+          >
             Cancel
           </Button>
-          <Button onPress={handleAdd} style={{ flex: 1 }}>
+          <Button onPress={handleConfirm} style={{ flex: 1, margin: 5 }}>
             OK
           </Button>
+        </View>
+        <View style={styles.iconButtonContainer}>
+          <View style={styles.iconButton}>
+            <IconButton
+              icon="trash"
+              size={32}
+              color={colors.primary500}
+              onPress={handleDelete}
+            />
+          </View>
         </View>
       </View>
     </View>
@@ -85,5 +149,14 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
+  },
+  iconButtonContainer: {
+    alignItems: "center",
+    borderTopColor: colors.primary100,
+    borderTopWidth: 2,
+    marginTop: 15,
+  },
+  iconButton: {
+    margin: 10,
   },
 });

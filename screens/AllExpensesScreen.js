@@ -1,13 +1,16 @@
 import { StyleSheet, View } from "react-native";
-import { expenses } from "../data/expenses";
 import ListExpenses from "../components/ListExpenses";
 import ExpensesResume from "../components/ExpensesResume";
+import { useContext } from "react";
+import { ExpensesContext } from "../store/expenses-context";
 
 export default AllExpensesScreen = () => {
+  const expensesCtx = useContext(ExpensesContext);
+
   return (
     <View>
-      <ExpensesResume text="All time" expenses={expenses} />
-      <ListExpenses expenses={expenses} />
+      <ExpensesResume text="All time" expenses={expensesCtx.expenses} />
+      <ListExpenses expenses={expensesCtx.expenses} />
     </View>
   );
 };

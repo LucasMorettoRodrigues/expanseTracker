@@ -40,5 +40,6 @@ const styles = StyleSheet.create({
   pressed: {
     opacity: 0.75,
     backgroundColor: colors.primary100,
+    borderRadius: 5,
   },
 });

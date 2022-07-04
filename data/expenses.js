@@ -21,7 +21,7 @@ export const expenses = [
     id: "e4",
     description: "A book",
     amount: 49.99,
-    date: new Date("2022-04-04"),
+    date: new Date("2022-05-05"),
   },
   {
     id: "e5",
@@ -51,12 +51,12 @@ export const expenses = [
     id: "e9",
     description: "A book",
     amount: 49.99,
-    date: new Date("2022-04-04"),
+    date: new Date("2022-06-04"),
   },
   {
     id: "e10",
     description: "Another Book",
     amount: 39.99,
-    date: new Date("2022-04-05"),
+    date: new Date("2022-07-05"),
   },
 ];
