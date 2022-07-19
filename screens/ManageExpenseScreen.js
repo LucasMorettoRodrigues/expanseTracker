@@ -1,9 +1,10 @@
 import { useContext, useLayoutEffect, useState } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import Button from "../components/UI/Button";
 import { colors } from "../constants/colors";
 import IconButton from "../components/UI/IconButton";
 import { ExpensesContext } from "../store/expenses-context";
+import ExpenseForm from "../components/ExpenseForm";
 
 export default ManageExpenseScreen = ({ route, navigation }) => {
   const expensesCtx = useContext(ExpensesContext);
@@ -11,47 +12,33 @@ export default ManageExpenseScreen = ({ route, navigation }) => {
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
 
+  const selectedExpense = expensesCtx.expenses.find(
+    (item) => item.id == editedExpenseId
+  );
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: isEditing ? "Edit Expense" : "Add Expense",
     });
   }, [navigation, isEditing]);
 
-  const [description, setDescription] = useState(
-    editedExpenseId
-      ? expensesCtx.expenses.find((item) => item.id === editedExpenseId)
-          .description
-      : ""
-  );
-  const [amount, setAmount] = useState(
-    editedExpenseId
-      ? expensesCtx.expenses
-          .find((item) => item.id === editedExpenseId)
-          .amount.toString()
-      : ""
-  );
-
-  const handleConfirm = () => {
-    if (!isValidated()) {
-      return;
-    }
-
+  const handleOnConfirm = (expenseData) => {
     if (isEditing) {
       expensesCtx.updateExpense(editedExpenseId, {
-        description,
-        amount: parseFloat(amount),
+        description: expenseData.description,
+        amount: parseFloat(expenseData.amount),
       });
     } else {
       expensesCtx.addExpense({
-        description: description,
-        amount: parseFloat(amount),
+        description: expenseData.description,
+        amount: expenseData.amount,
         date: new Date(),
       });
     }
     navigation.goBack();
   };
 
-  const handleCancel = () => {
+  const handleOnCancel = () => {
     navigation.goBack();
   };
 
@@ -60,8 +47,8 @@ export default ManageExpenseScreen = ({ route, navigation }) => {
     navigation.goBack();
   };
 
-  const isValidated = () => {
-    if (description.length > 0 && parseInt(amount)) {
+  const isValidated = (expenseData) => {
+    if (expenseData.description.length > 0 && parseInt(expenseData.amount)) {
       return true;
     }
 
@@ -70,37 +57,12 @@ export default ManageExpenseScreen = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
+      <ExpenseForm
+        onCancel={handleOnCancel}
+        onSubmit={handleOnConfirm}
+        defaultValues={selectedExpense}
+      />
       <View style={styles.inputController}>
-        <Text style={styles.label}>Description</Text>
-        <TextInput
-          value={description}
-          onChangeText={(value) => setDescription(value)}
-          style={styles.input}
-        ></TextInput>
-      </View>
-
-      <View style={styles.inputController}>
-        <Text style={styles.label}>Amount</Text>
-        <TextInput
-          value={amount}
-          onChangeText={(value) => setAmount(value)}
-          style={styles.input}
-        ></TextInput>
-      </View>
-
-      <View style={styles.inputController}>
-        <View style={styles.buttonContainer}>
-          <Button
-            onPress={handleCancel}
-            mode="flat"
-            style={{ flex: 1, margin: 5 }}
-          >
-            Cancel
-          </Button>
-          <Button onPress={handleConfirm} style={{ flex: 1, margin: 5 }}>
-            OK
-          </Button>
-        </View>
         <View style={styles.iconButtonContainer}>
           <View style={styles.iconButton}>
             <IconButton
